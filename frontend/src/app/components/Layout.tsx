@@ -16,7 +16,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   Products
                 </Link>
               </li>
-              <li className="text-gray-700 hover:text-blue-600">Cart</li>
+              <Link href="/cart" className="text-gray-700 hover:text-blue-600">
+                Cart
+              </Link>
               <li>
                 <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
                   Login
