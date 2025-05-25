@@ -20,9 +20,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 Cart
               </Link>
               <li>
-                <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                  Login
-                </button>
+                <Link href="/login">
+                  <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                    Login
+                  </button>
+                </Link>
               </li>
             </ul>
           </div>
