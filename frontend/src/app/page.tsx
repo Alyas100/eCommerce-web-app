@@ -1,4 +1,4 @@
-// Second iteration - add styling
+import Link from "next/link";
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-gray-50">
@@ -7,7 +7,14 @@ export default function HomePage() {
           <div className="flex justify-between items-center h-16">
             <div className="text-2xl font-bold text-blue-600">TechHub</div>
             <ul className="flex space-x-8">
-              <li className="text-gray-700 hover:text-blue-600">Products</li>
+              <li>
+                <Link
+                  href="/products"
+                  className="text-gray-700 hover:text-blue-600"
+                >
+                  Products
+                </Link>
+              </li>
               <li className="text-gray-700 hover:text-blue-600">Categories</li>
               <li className="text-gray-700 hover:text-blue-600">Cart</li>
               <li>
