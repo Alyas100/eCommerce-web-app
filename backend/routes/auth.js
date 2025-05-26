@@ -1,15 +1,15 @@
-const express = requires("express");
+const express = require("express");
 const router = express.Router();
 
 // this endpoint will receive user data from NextAuth.js
-router.port("/user", async (req, res) => {
+router.post("/user", async (req, res) => {
   try {
     const { email, name, image, googleId } = req.body;
 
     console.log("Received user data:", { email, name, image, googleId });
 
     // here need to do:
-    // check if user exisr in database here
+    // check if user exist in database here
     // create new user if doesnt exist
 
     res.json({
@@ -28,4 +28,13 @@ router.port("/user", async (req, res) => {
       message: "Authentication failed",
     });
   }
+});
+
+// Get user profile
+router.get("/profile", (req, res) => {
+  // add auth middleware here
+  res.json({
+    message: "User profile endpoint",
+    // return user data from database
+  });
 });
