@@ -38,3 +38,5 @@ router.get("/profile", (req, res) => {
     // return user data from database
   });
 });
+
+module.exports = router;
