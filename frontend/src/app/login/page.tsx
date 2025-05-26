@@ -1,8 +1,14 @@
 "use client";
 import { useState } from "react";
+// for handling auth
+import { signIn, useSession } from "next-auth/react";
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
+  const { data: session } = useSession();
+  const router = useRouter();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -10,6 +16,12 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
+  // Redirect if already logged in
+  if (session) {
+    router.push("/");
+    return <div>Redirecting...</div>;
+  }
 
   // Handle form input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -84,11 +96,7 @@ export default function LoginPage() {
   const handleGoogleLogin = async () => {
     setIsLoading(true);
     try {
-      // If using NextAuth.js
-      // signIn('google', { callbackUrl: '/' });
-
-      // Or redirect to your Google OAuth endpoint
-      window.location.href = "/api/auth/google";
+      await signIn("google", { callbackUrl: "/" });
     } catch (error) {
       console.error("Google login error:", error);
       setErrors({ general: "Google login failed. Please try again." });
