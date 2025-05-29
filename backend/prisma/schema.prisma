@@ -8,63 +8,59 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
+  id        String     @id @default(cuid())
+  email     String     @unique
   name      String?
   image     String?
-  googleId  String?  @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  
-  // E-commerce related fields
-  orders    Order[]
-  cartItems CartItem[]
+  googleId  String?    @unique
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
   addresses Address[]
-  
+  cartItems CartItem[]
+  orders    Order[]
+
   @@map("users")
 }
 
 model Product {
-    id          String          @id @default(cuid())
-    imageUrl    String  
-    name        String
-    price       Decimal         @db.Decimal(10, 2)
-    createdAt   DateTime        @default(now())
-    updatedAt   DateTime        @updatedAt
+  id         String      @id @default(cuid())
+  imageUrl   String
+  name       String
+  price      Decimal     @db.Decimal(10, 2)
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  categoryid String
+  cartItems  CartItem[]
+  orderItems OrderItem[]
+  categories categories  @relation(fields: [categoryid], references: [id])
 
-    cartItems   CartItem[]
-    orderItems  OrderItem[]
-
-    @@map("products")
+  @@map("products")
 }
 
 model CartItem {
-  id        String  @id @default(cuid())
+  id        String   @id @default(cuid())
   userId    String
   productId String
-  quantity  Int     @default(1)
+  quantity  Int      @default(1)
   createdAt DateTime @default(now())
-  
-  // Relations
-  user      User    @relation(fields: [userId], references: [id])
-  product   Product @relation(fields: [productId], references: [id])
-  
+  product   Product  @relation(fields: [productId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
   @@unique([userId, productId])
   @@map("cart_items")
 }
 
 model Order {
-  id           String      @id @default(cuid())
-  orderNumber  String      @unique
-  userId       String
-  status       OrderStatus @default(PENDING)
-  totalAmount  Decimal     @db.Decimal(10, 2)
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
-  
-  user         User        @relation(fields: [userId], references: [id])
-  orderItems   OrderItem[]
-  
+  id          String      @id @default(cuid())
+  orderNumber String      @unique
+  userId      String
+  status      OrderStatus @default(PENDING)
+  totalAmount Decimal     @db.Decimal(10, 2)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  orderItems  OrderItem[]
+  user        User        @relation(fields: [userId], references: [id])
+
   @@map("orders")
 }
 
@@ -74,26 +70,30 @@ model OrderItem {
   productId String
   quantity  Int
   price     Decimal @db.Decimal(10, 2)
-  
   order     Order   @relation(fields: [orderId], references: [id])
   product   Product @relation(fields: [productId], references: [id])
-  
+
   @@map("order_items")
 }
 
 model Address {
-  id          String  @id @default(cuid())
-  userId      String
-  street      String
-  city        String
-  state       String
-  zipCode     String
-  country     String
-  isDefault   Boolean @default(false)
-  
-  user        User    @relation(fields: [userId], references: [id])
-  
+  id        String  @id @default(cuid())
+  userId    String
+  street    String
+  city      String
+  state     String
+  zipCode   String
+  country   String
+  isDefault Boolean @default(false)
+  user      User    @relation(fields: [userId], references: [id])
+
   @@map("addresses")
+}
+
+model categories {
+  id       String    @id
+  name     String    @unique
+  products Product[]
 }
 
 enum OrderStatus {
@@ -103,4 +103,3 @@ enum OrderStatus {
   DELIVERED
   CANCELLED
 }
-
