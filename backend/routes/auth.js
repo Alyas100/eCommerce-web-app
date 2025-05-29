@@ -1,4 +1,6 @@
 const express = require("express");
+const { prisma } = require("../lib/prisma");
+const { isErrored } = require("stream");
 const router = express.Router();
 
 // this endpoint will receive user data from NextAuth.js
@@ -8,17 +10,53 @@ router.post("/user", async (req, res) => {
 
     console.log("Received user data:", { email, name, image, googleId });
 
-    // here need to do:
-    // check if user exist in database here
-    // create new user if doesnt exist
+    // check if user exist in database
+    const existingUser = await prisma.user.findUnique({
+      where: {
+        email: email,
+      },
+    });
+
+    let user;
+
+    if (existingUser) {
+      // user exists, update their info if needed (in case of they changing their email name or profile)
+      user = await prisma.user.update({
+        where: {
+          email: email,
+        },
+        data: {
+          name: name,
+          image: image,
+          googleId: googleId, // update this if wasn't set before
+        },
+      });
+
+      console.log("Update existing user:", user);
+    } else {
+      // Create new user
+      user = await prisma.user.create({
+        data: {
+          email: email,
+          name: name,
+          image: image,
+          googleId: googleId,
+        },
+      });
+
+      console.log("Created new user:", user);
+    }
 
     res.json({
       success: true,
-      message: "User authenticated successfully",
+      message: existingUser
+        ? "User updated successfully"
+        : "User created successfully",
       user: {
-        email,
-        name,
-        image,
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        image: user.image,
       },
     });
   } catch (error) {
