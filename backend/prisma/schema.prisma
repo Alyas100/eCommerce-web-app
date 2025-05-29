@@ -26,6 +26,7 @@ model User {
 
 model Product {
     id          String          @id @default(cuid())
+    imageUrl    String  
     name        String
     price       Decimal         @db.Decimal(10, 2)
     createdAt   DateTime        @default(now())
