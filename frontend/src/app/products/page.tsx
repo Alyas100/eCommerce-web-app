@@ -1,101 +1,25 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Layout from "../components/Layout";
 
-export default function ProductsPage() {
-  // Sample product data
-  const products = [
-    {
-      id: 1,
-      name: "iPhone 15 Pro",
-      price: 999,
-      category: "smartphones",
-      image:
-        "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=400&h=300&fit=crop",
-      rating: 4.8,
-      reviews: 324,
-    },
-    {
-      id: 2,
-      name: "MacBook Air M2",
-      price: 1199,
-      category: "laptops",
-      image:
-        "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=400&h=300&fit=crop",
-      rating: 4.9,
-      reviews: 456,
-    },
-    {
-      id: 3,
-      name: "Sony WH-1000XM5",
-      price: 399,
-      category: "headphones",
-      image:
-        "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=400&h=300&fit=crop",
-      rating: 4.7,
-      reviews: 891,
-    },
-    {
-      id: 4,
-      name: "Samsung Galaxy S24",
-      price: 899,
-      category: "smartphones",
-      image:
-        "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=300&fit=crop",
-      rating: 4.6,
-      reviews: 234,
-    },
-    {
-      id: 5,
-      name: "Dell XPS 13",
-      price: 1099,
-      category: "laptops",
-      image:
-        "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&h=300&fit=crop",
-      rating: 4.5,
-      reviews: 167,
-    },
-    {
-      id: 6,
-      name: "iPad Pro 12.9",
-      price: 1099,
-      category: "tablets",
-      image:
-        "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&h=300&fit=crop",
-      rating: 4.8,
-      reviews: 423,
-    },
-    {
-      id: 7,
-      name: "AirPods Pro",
-      price: 249,
-      category: "headphones",
-      image:
-        "https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?w=400&h=300&fit=crop",
-      rating: 4.4,
-      reviews: 1203,
-    },
-    {
-      id: 8,
-      name: 'Gaming Monitor 27"',
-      price: 599,
-      category: "monitors",
-      image:
-        "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=400&h=300&fit=crop",
-      rating: 4.6,
-      reviews: 89,
-    },
-  ];
+// Define the product type
+interface Product {
+  id: number;
+  image: string;
+  name: string;
+  price: number;
+}
 
-  const categories = [
-    { id: "all", name: "All Products" },
-    { id: "smartphones", name: "Smartphones" },
-    { id: "laptops", name: "Laptops" },
-    { id: "tablets", name: "Tablets" },
-    { id: "headphones", name: "Headphones" },
-    { id: "monitors", name: "Monitors" },
-  ];
+export default function ProductsPage() {
+  const [products, setProducts] = useState<Product[]>([]);
+
+  // Fetch products from API
+  useEffect(() => {
+    fetch("/api/products")
+      .then((res) => res.json())
+      .then((data) => setProducts(data));
+  }, []);
 
   return (
     <Layout>
