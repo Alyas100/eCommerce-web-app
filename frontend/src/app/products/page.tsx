@@ -6,7 +6,7 @@ import Layout from "../components/Layout";
 // Define the product type
 interface Product {
   id: number;
-  image: string;
+  imageUrl: string;
   name: string;
   price: number;
 }
@@ -18,7 +18,10 @@ export default function ProductsPage() {
   useEffect(() => {
     fetch("/api/products")
       .then((res) => res.json())
-      .then((data) => setProducts(data));
+      .then((data) => {
+        console.log("Products data:", data); // Check what images look like
+        setProducts(data);
+      });
   }, []);
 
   return (
@@ -43,7 +46,7 @@ export default function ProductsPage() {
             >
               <div className="aspect-w-16 aspect-h-12">
                 <img
-                  src={product.image}
+                  src={product.imageUrl}
                   alt={product.name}
                   className="w-full h-48 object-cover rounded-t-lg"
                 />
