@@ -15,8 +15,11 @@ app.use(
 );
 app.use(express.json());
 
-// Routes
+// Auth Routes
 app.use("/api/auth", require("./routes/auth"));
+
+// Products routes
+app.use("/api", require("./routes/products"));
 
 // Protected route
 app.get("/api/protected", authenticateUser, (req, res) => {
