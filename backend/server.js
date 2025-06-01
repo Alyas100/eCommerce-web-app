@@ -21,6 +21,9 @@ app.use("/api/auth", require("./routes/auth"));
 // Products routes
 app.use("/api", require("./routes/products"));
 
+// Cart routes
+app.use("/api", require("./routes/cart"));
+
 // Protected route
 app.get("/api/protected", authenticateUser, (req, res) => {
   res.json({
