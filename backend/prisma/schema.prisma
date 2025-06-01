@@ -23,16 +23,16 @@ model User {
 }
 
 model Product {
-  id         String      @id @default(cuid())
-  imageUrl   String
-  name       String
-  price      Decimal     @db.Decimal(10, 2)
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
-  categoryid String
-  cartItems  CartItem[]
-  orderItems OrderItem[]
-  categories categories  @relation(fields: [categoryid], references: [id])
+  image_url   String
+  name        String
+  price       Decimal     @db.Decimal(10, 2)
+  created_at  DateTime    @default(now())
+  updated_at  DateTime    @updatedAt
+  category_id String
+  id          String      @id @default(cuid())
+  cartItems   CartItem[]
+  orderItems  OrderItem[]
+  categories  categories  @relation(fields: [category_id], references: [id], map: "products_categoryid_fkey")
 
   @@map("products")
 }
@@ -40,9 +40,9 @@ model Product {
 model CartItem {
   id        String   @id @default(cuid())
   userId    String
-  productId String
   quantity  Int      @default(1)
   createdAt DateTime @default(now())
+  productId String
   product   Product  @relation(fields: [productId], references: [id])
   user      User     @relation(fields: [userId], references: [id])
 
@@ -67,9 +67,9 @@ model Order {
 model OrderItem {
   id        String  @id @default(cuid())
   orderId   String
-  productId String
   quantity  Int
   price     Decimal @db.Decimal(10, 2)
+  productId String
   order     Order   @relation(fields: [orderId], references: [id])
   product   Product @relation(fields: [productId], references: [id])
 
