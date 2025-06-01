@@ -25,9 +25,7 @@ const authenticateUser = (req, res, next) => {
     if (token === "valid-token") {
       // Mock data for adding user info to request object
       req.user = {
-        id: 1,
-        email: "user@example.com",
-        name: "John",
+        id: "cmb8z3qgu0000t2k4wbxbagv1",
       };
       next(); // Continue to the next middleware/route
     } else {
