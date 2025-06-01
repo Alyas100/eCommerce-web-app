@@ -5,8 +5,8 @@ import Layout from "../components/Layout";
 
 // Define the product type
 interface Product {
-  id: number;
-  imageUrl: string;
+  id: string;
+  image_url: string;
   name: string;
   price: number;
 }
@@ -23,6 +23,35 @@ export default function ProductsPage() {
         setProducts(data);
       });
   }, []);
+
+  // Add to cart function
+  const handleAddToCart = async (productId: string, quantity: number = 1) => {
+    try {
+      const response = await fetch("/api/cart", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          productId,
+          quantity,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        console.log("Added to cart:", result);
+        alert("Product added to cart!"); // Simple feedback for now
+      } else {
+        console.error("Error:", result.error);
+        alert("Failed to add to cart: " + result.error);
+      }
+    } catch (error) {
+      console.error("Failed to add to cart:", error);
+      alert("Failed to add to cart. Please try again.");
+    }
+  };
 
   return (
     <Layout>
@@ -46,7 +75,7 @@ export default function ProductsPage() {
             >
               <div className="aspect-w-16 aspect-h-12">
                 <img
-                  src={product.imageUrl}
+                  src={product.image_url}
                   alt={product.name}
                   className="w-full h-48 object-cover rounded-t-lg"
                 />
@@ -59,7 +88,10 @@ export default function ProductsPage() {
                   <span className="text-2xl font-bold text-gray-900">
                     ${product.price}
                   </span>
-                  <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors">
+                  <button
+                    onClick={() => handleAddToCart(product.id, 1)}
+                    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors"
+                  >
                     Add to Cart
                   </button>
                 </div>
