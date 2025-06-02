@@ -36,17 +36,44 @@ export default function CartPage() {
       });
   }, []);
 
-  const updateQuantity = (id: string, newQuantity: number) => {
+  const updateQuantity = async (id: string, newQuantity: number) => {
     if (newQuantity < 1) return;
-    setCartItems((items) =>
-      items.map((item) =>
-        item.id === id ? { ...item, quantity: newQuantity } : item
-      )
-    );
+
+    try {
+      const response = await fetch("/api/cart", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, quantity: newQuantity }),
+      });
+
+      if (response.ok) {
+        // Update local state only after successful backend update
+        setCartItems((items) =>
+          items.map((item) =>
+            item.id === id ? { ...item, quantity: newQuantity } : item
+          )
+        );
+      }
+    } catch (error) {
+      console.error("Error updating quantity:", error);
+    }
   };
 
-  const removeItem = (id: string) => {
-    setCartItems((items) => items.filter((item) => item.id !== id));
+  const removeItem = async (id: string) => {
+    try {
+      const response = await fetch("/api/cart", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+
+      if (response.ok) {
+        // Update local state only after successful backend removal
+        setCartItems((items) => items.filter((item) => item.id !== id));
+      }
+    } catch (error) {
+      console.error("Error removing item:", error);
+    }
   };
 
   const total = Array.isArray(cartItems)
