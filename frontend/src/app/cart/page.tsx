@@ -1,42 +1,42 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+interface CartItem {
+  id: string;
+  quantity: number;
+  productId: string;
+  product: {
+    id: string;
+    name: string;
+    price: number;
+    image_url: string;
+  };
+}
 
 export default function CartPage() {
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      name: "iPhone 15 Pro",
-      price: 999,
-      quantity: 1,
-      image:
-        "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=150&h=150&fit=crop",
-      color: "Natural Titanium",
-      storage: "128GB",
-    },
-    {
-      id: 2,
-      name: "AirPods Pro",
-      price: 249,
-      quantity: 2,
-      image:
-        "https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?w=150&h=150&fit=crop",
-      color: "White",
-      storage: null,
-    },
-    {
-      id: 3,
-      name: "MacBook Air M2",
-      price: 1199,
-      quantity: 1,
-      image:
-        "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=150&h=150&fit=crop",
-      color: "Space Gray",
-      storage: "256GB SSD",
-    },
-  ]);
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
-  const updateQuantity = (id: number, newQuantity: number) => {
+  // Fetch cart items from API
+  useEffect(() => {
+    fetch("/api/cart")
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Cart data:", data);
+        // Check if the response contains an error
+        if (data.error) {
+          setCartItems([]);
+        } else {
+          // Make sure data is an array
+          setCartItems(Array.isArray(data) ? data : []);
+        }
+      })
+      .catch((err) => {
+        console.error("Error fetching cart items:", err);
+      });
+  }, []);
+
+  const updateQuantity = (id: string, newQuantity: number) => {
     if (newQuantity < 1) return;
     setCartItems((items) =>
       items.map((item) =>
@@ -45,14 +45,16 @@ export default function CartPage() {
     );
   };
 
-  const removeItem = (id: number) => {
+  const removeItem = (id: string) => {
     setCartItems((items) => items.filter((item) => item.id !== id));
   };
 
-  const total = cartItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
+  const total = Array.isArray(cartItems)
+    ? cartItems.reduce(
+        (sum, item) => sum + item.product.price * item.quantity,
+        0
+      )
+    : 0;
 
   if (cartItems.length === 0) {
     return (
@@ -120,22 +122,20 @@ export default function CartPage() {
                   <div className="flex items-center space-x-4">
                     <div className="flex-shrink-0">
                       <img
-                        src={item.image}
-                        alt={item.name}
+                        src={item.product.image_url}
+                        alt={item.product.name}
                         className="w-20 h-20 object-cover rounded-lg"
                       />
                     </div>
 
                     <div className="flex-1 min-w-0">
                       <h3 className="text-lg font-semibold text-gray-900 mb-1">
-                        {item.name}
+                        {item.product.name} {/* Fixed: use item.product.name */}
                       </h3>
-                      <div className="text-sm text-gray-600 space-y-1">
-                        <p>Color: {item.color}</p>
-                        {item.storage && <p>Storage: {item.storage}</p>}
-                      </div>
+
                       <p className="text-lg font-bold text-gray-900 mt-2">
-                        ${item.price}
+                        ${item.product.price}{" "}
+                        {/* Fixed: use item.product.price */}
                       </p>
                     </div>
 
@@ -187,7 +187,8 @@ export default function CartPage() {
 
                     <div className="text-right">
                       <p className="text-lg font-bold text-gray-900">
-                        ${(item.price * item.quantity).toLocaleString()}
+                        ${(item.product.price * item.quantity).toLocaleString()}{" "}
+                        {/* Fixed: use item.product.price */}
                       </p>
                       <button
                         onClick={() => removeItem(item.id)}
