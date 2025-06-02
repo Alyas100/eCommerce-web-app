@@ -8,7 +8,7 @@ export async function GET() {
 
     const cartItems = await response.json();
 
-    return Response.json(cartItems.data);
+    return Response.json(cartItems.data.items);
   } catch (error) {
     return Response.json(
       { error: "Failed to fetch cart items" },
@@ -26,11 +26,10 @@ export async function POST(request: {
     // Get the request data
     const { productId, quantity } = await request.json();
 
-    // Make request to your Node.js backend
     const response = await fetch(`${process.env.BACKEND_URL}/api/cart/add`, {
       method: "POST",
       headers: {
-        Authorization: "Bearer valid-token", // Your test token
+        Authorization: "Bearer valid-token",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
