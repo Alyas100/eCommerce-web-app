@@ -1,3 +1,22 @@
+export async function GET() {
+  try {
+    const response = await fetch(`${process.env.BACKEND_URL}/api/cart`, {
+      headers: {
+        Authorization: "Bearer valid-token", // Add this line
+      },
+    });
+
+    const cartItems = await response.json();
+
+    return Response.json(cartItems.data);
+  } catch (error) {
+    return Response.json(
+      { error: "Failed to fetch cart items" },
+      { status: 500 }
+    );
+  }
+}
+
 export async function POST(request: {
   json: () =>
     | PromiseLike<{ productId: any; quantity: any }>
