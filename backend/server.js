@@ -14,6 +14,7 @@ app.use(
   })
 );
 app.use(express.json());
+app.use("/webhook", express.raw({ type: "application/json" })); // Raw body for webhooks
 
 // Auth Routes
 app.use("/api/auth", require("./routes/auth"));
@@ -23,6 +24,9 @@ app.use("/api", require("./routes/products"));
 
 // Cart routes
 app.use("/api", require("./routes/cart"));
+
+// payment intent (stripe)
+app.use("/api", require("./routes/stripe"));
 
 // Protected route
 app.get("/api/protected", authenticateUser, (req, res) => {
