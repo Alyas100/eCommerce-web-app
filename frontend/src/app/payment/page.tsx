@@ -29,14 +29,18 @@ export default function CheckoutPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsProcessing(true);
+    setPaymentError("");
 
     try {
+      // Step 1: Create Payment Intent
       const response = await fetch("/api/stripe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          formData, // Send the actual form data
-          orderTotal: 5494.5, // Send the order total
+          formData,
+          orderTotal: 5494.5,
+          confirmPayment: false, // First call to create intent
         }),
       });
 
@@ -50,21 +54,36 @@ export default function CheckoutPage() {
         throw new Error("No client secret received");
       }
 
-      // Step 2: Simulate payment confirmation (for demo purposes)
-      // In a real app, you'd use Stripe Elements to collect and confirm payment
-      console.log("Payment Intent created:", paymentIntentId);
-      console.log("Form data:", formData);
-
-      // Simulate processing delay
+      // Step 2: Simulate payment processing
+      console.log("Processing payment...");
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      // Step 3: Mock successful payment
+      // Step 3: Confirm Payment & Complete Order (same API, different flag)
+      const confirmResponse = await fetch("/api/stripe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          formData,
+          orderTotal: 5494.5,
+          confirmPayment: true, // Second call to confirm and complete
+          paymentIntentId,
+        }),
+      });
+
+      if (!confirmResponse.ok) {
+        throw new Error("Failed to complete order");
+      }
+
+      const orderResult = await confirmResponse.json();
+      console.log("Order completed:", orderResult);
+
       setPaymentSuccess(true);
 
-      // Redirect to success page after a moment
+      // Redirect to success page
       setTimeout(() => {
-        // You can redirect to a success page or show success message
-        window.location.href = "/order-success";
+        window.location.href = `/order-success?orderId=${
+          orderResult.order?.orderId || "unknown"
+        }`;
       }, 1500);
     } catch (error) {
       console.error("Payment error:", error);
