@@ -13,6 +13,7 @@ interface Product {
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   // Fetch products from API
   useEffect(() => {
@@ -53,6 +54,11 @@ export default function ProductsPage() {
     }
   };
 
+  // filter products by search term
+  const filteredProducts = products.filter((product) =>
+    product.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <Layout>
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -64,6 +70,17 @@ export default function ProductsPage() {
           <p className="text-gray-600">
             Discover premium electronics and tech accessories
           </p>
+
+          {/* Search Input */}
+          <div className="mt-4">
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search products..."
+              className="w-full md:w-1/2 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring focus:border-blue-300"
+            />
+          </div>
         </div>
 
         {/* Products Grid */}
