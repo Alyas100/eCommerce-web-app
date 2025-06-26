@@ -34,7 +34,7 @@ router.post("/user", async (req, res) => {
 
       console.log("Update existing user:", user);
     } else {
-      // Create new user
+      // create new user
       user = await prisma.user.create({
         data: {
           email: email,
