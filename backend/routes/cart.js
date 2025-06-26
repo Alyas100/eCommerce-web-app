@@ -8,7 +8,7 @@ router.get("/cart", authenticateUser, async (req, res) => {
   try {
     const userId = req.user.id;
 
-    // Fetch all cart items for the user with product details
+    // fetch all cart items for the user with product details
     const cartItems = await prisma.cartItem.findMany({
       where: { userId: userId },
       include: {
