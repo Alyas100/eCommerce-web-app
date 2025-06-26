@@ -68,7 +68,7 @@ router.post("/user", async (req, res) => {
   }
 });
 
-// Get user profile
+// get user profile
 router.get("/profile", (req, res) => {
   // add auth middleware here
   res.json({
