@@ -1,6 +1,6 @@
 name: CI Pipeline
 
-# tells GitHub to run this workflow when code is pushed to the dev branch remote
+# Tells GitHub to run this workflow when code is pushed to the dev branch
 on:
   push:
     branches:
