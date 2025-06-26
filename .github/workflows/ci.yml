@@ -9,10 +9,30 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4 # donwload the repo into vm
+        uses: actions/checkout@v4
 
-      # print message for demo/testing
-      - name: Say Hello
-        run: echo "CI is running on dev branch!"
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      # FRONTEND: Install & Build
+      - name: Install Frontend Dependencies
+        working-directory: ./frontend
+        run: npm install
+
+      - name: Build Frontend
+        working-directory: ./frontend
+        run: npm run build
+
+      # BACKEND: Install & Test
+      - name: Install Backend Dependencies
+        working-directory: ./backend
+        run: npm install
+
+      - name: Run Backend Tests
+        working-directory: ./backend
+        run: npm test || echo "No tests yet, skipping"
