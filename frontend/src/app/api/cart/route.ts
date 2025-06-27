@@ -59,9 +59,7 @@ export async function PATCH(request: {
   }
 }
 
-export async function DELETE(request: {
-  json: () => PromiseLike<{ id: any }> | { id: any };
-}) {
+export async function DELETE(request: Request) {
   try {
     const { id } = await request.json();
 
