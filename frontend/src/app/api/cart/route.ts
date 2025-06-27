@@ -1,3 +1,5 @@
+import { NextRequest } from "next/server";
+
 //get all item from cart
 export async function GET() {
   try {
@@ -92,13 +94,9 @@ export async function DELETE(request: {
 }
 
 // add item into cart
-export async function POST(request: {
-  json: () =>
-    | PromiseLike<{ productId: any; quantity: any }>
-    | { productId: any; quantity: any };
-}) {
+
+export async function POST(request: NextRequest) {
   try {
-    // Get the request data
     const { productId, quantity } = await request.json();
 
     const response = await fetch(`${process.env.BACKEND_URL}/api/cart/add`, {
