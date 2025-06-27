@@ -1,0 +1,14 @@
+{
+  "name": "ecommerce",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev -w frontend\" \"npm run dev -w backend\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.0"
+  }
+}
