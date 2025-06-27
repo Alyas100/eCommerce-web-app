@@ -1,11 +1,11 @@
 import { NextRequest } from "next/server";
 
-//get all item from cart
+// Get all items from cart
 export async function GET() {
   try {
     const response = await fetch(`${process.env.BACKEND_URL}/api/cart`, {
       headers: {
-        Authorization: "Bearer valid-token", // Add this line
+        Authorization: "Bearer valid-token",
       },
     });
 
@@ -20,12 +20,8 @@ export async function GET() {
   }
 }
 
-// update cart item quantity
-export async function PATCH(request: {
-  json: () =>
-    | PromiseLike<{ id: any; quantity: any }>
-    | { id: any; quantity: any };
-}) {
+// Update cart item quantity
+export async function PATCH(request: Request) {
   try {
     const { id, quantity } = await request.json();
 
@@ -59,6 +55,7 @@ export async function PATCH(request: {
   }
 }
 
+// Delete a cart item
 export async function DELETE(request: Request) {
   try {
     const { id } = await request.json();
@@ -91,9 +88,8 @@ export async function DELETE(request: Request) {
   }
 }
 
-// add item into cart
-
-export async function POST(request: NextRequest) {
+// Add item to cart
+export async function POST(request: Request) {
   try {
     const { productId, quantity } = await request.json();
 
